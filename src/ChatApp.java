@@ -27,20 +27,22 @@ public class ChatApp {
         chatGroup.add(new ChatUser("Lorenzo73", "89437"));
 
         // The message to send
-        ChatMessageContent messageContent = new ChatMessageContent(myUser, "Welcome to the grouper!", new Date());
+        ChatMessageContent messageContent =
+                new ChatMessageContent(myUser, "Welcome to the grouper!", new Date());
 
         // The message is sent through the chat message distributor.
         ChatMessageDistributor messageDistributor = new ChatMessageDistributor();
         messageDistributor.sendChatMessage(chatGroup, messageContent);
 
-        // There was a misspelling in our message so we're changing it and resending it!
+        // There was a misspelling in our message, so we're changing it and resending it!
         // This shouldn't replace our original message, it should just send a new one.
-        messageContent.message = "Welcome to the group!";
+        ChatMessageContent newMessageContent =
+                new ChatMessageContent(myUser, "Welcome to the group!", new Date());
 
         // Because all the threads are referencing the same `ChatMessageContent` object,
         // any threads that haven't executed yet will send the modified message.
-        //messageDistributor.sendChatMessage(chatGroup, messageContent);
-
+        messageDistributor.sendChatMessage(chatGroup, newMessageContent);
     }
+
 }
 

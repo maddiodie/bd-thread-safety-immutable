@@ -1,11 +1,13 @@
 
 
 import java.util.Date;
+import java.util.Objects;
 
-public class ChatMessageContent {
-    public ChatUser sender;
-    public String message;
-    public Date creationDate;
+public final class ChatMessageContent {
+
+    private final ChatUser sender;
+    private final String message;
+    private final Date creationDate;
 
     /**
      *
@@ -16,7 +18,7 @@ public class ChatMessageContent {
     public ChatMessageContent(ChatUser sender, String message, Date creationDate) {
         this.sender = sender;
         this.message = message;
-        this.creationDate = creationDate;
+        this.creationDate = new Date(creationDate.getTime());
     }
 
     public ChatUser getSender() {
@@ -28,6 +30,22 @@ public class ChatMessageContent {
     }
 
     public Date getCreationDate() {
-        return creationDate;
+        return new Date(creationDate.getTime());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChatMessageContent)) return false;
+        ChatMessageContent that = (ChatMessageContent) o;
+        return Objects.equals(getSender(), that.getSender())
+                && Objects.equals(getMessage(), that.getMessage())
+                && Objects.equals(getCreationDate(), that.getCreationDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSender(), getMessage(), getCreationDate());
+    }
+
 }

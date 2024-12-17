@@ -1,25 +1,32 @@
+import java.util.Date;
 
+public final class ChatMessage implements Runnable {
 
-public class ChatMessage implements Runnable {
-    public ChatUser recipient;
-    public ChatMessageContent messageContent;
+    private final ChatUser recipient;
+    private final ChatMessageContent messageContent;
 
     /**
-     *
+     * ChatMessage constructor.
      * @param recipient The ChatUser object for our recipient.
      * @param messageContent The message to send.
      */
     public ChatMessage(ChatUser recipient, ChatMessageContent messageContent) {
-        this.recipient = recipient;
-        this.messageContent = messageContent;
+        this.recipient = new ChatUser(recipient.getUsername(), recipient.getUserId());
+        this.messageContent = new ChatMessageContent(
+                new ChatUser(messageContent.getSender().getUsername(),
+                        messageContent.getSender().getUserId()),
+                messageContent.getMessage(), new Date(messageContent.getCreationDate().getTime()));
     }
 
     public ChatUser getRecipient() {
-        return recipient;
+        return new ChatUser(recipient.getUsername(), recipient.getUserId());
     }
 
     public ChatMessageContent getMessageContent() {
-        return messageContent;
+        return new ChatMessageContent(
+                new ChatUser(messageContent.getSender().getUsername(),
+                        messageContent.getSender().getUserId()),
+                messageContent.getMessage(), new Date(messageContent.getCreationDate().getTime()));
     }
 
     /**
@@ -28,7 +35,9 @@ public class ChatMessage implements Runnable {
     public void run() {
         // here's where we send the message to our recipient.
         System.out.println("Message: '" + this.messageContent.getMessage() + "' has been sent to user " +
-                this.getRecipient().getUsername() + " by " + this.messageContent.getSender().getUsername() + " on " +
+                this.getRecipient().getUsername() + " by " +
+                this.messageContent.getSender().getUsername() + " on " +
                 this.messageContent.getCreationDate().toString());
     }
+
 }
